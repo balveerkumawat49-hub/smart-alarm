@@ -10,7 +10,15 @@
 
 let alarms = [];
 
+let schedules = [];
+
 let activeAlarmIndex = null;
+
+let activeAlarmData = null;
+
+let activeAlarmIsSchedule = false;
+
+let scheduleSnoozeTimer = null;
 
 let audioContext = null;
 
@@ -331,6 +339,176 @@ function saveAlarms() {
 
 loadAlarms();
 
+
+// =========================================================
+// LOCAL STORAGE - SCHEDULES
+// =========================================================
+
+function loadSchedules() {
+  try {
+    const saved = localStorage.getItem("schedules");
+    if (!saved) {
+      schedules = [];
+      return;
+    }
+    const data = JSON.parse(saved);
+    schedules = Array.isArray(data) ? data.filter(s => s && typeof s === "object").map(s => ({
+      id: s.id || (Date.now() + "-" + Math.random()),
+      time: s.time || "",
+      purpose: s.purpose || "",
+      ringtone: s.ringtone || "bell",
+      repeat: s.repeat || "daily",
+      days: Array.isArray(s.days) ? s.days.map(Number) : [0,1,2,3,4,5,6],
+      date: s.date || "",
+      enabled: s.enabled !== false,
+      lastTriggeredKey: s.lastTriggeredKey || null
+    })).filter(s => /^\d{2}:\d{2}$/.test(s.time)) : [];
+  } catch (error) {
+    console.error("Schedule loading error:", error);
+    schedules = [];
+  }
+}
+
+function saveSchedules() {
+  try {
+    localStorage.setItem("schedules", JSON.stringify(schedules));
+  } catch (error) {
+    console.error("Schedule saving error:", error);
+  }
+}
+
+loadSchedules();
+
+function updateScheduleRepeatUI() {
+  const repeat = $("scheduleRepeat")?.value || "daily";
+  const days = $("scheduleDays");
+  const date = $("scheduleDateGroup");
+  if (days) days.classList.toggle("hidden-section", repeat !== "days");
+  if (date) date.classList.toggle("hidden-section", repeat !== "once");
+}
+
+function getSelectedScheduleDays() {
+  return Array.from(document.querySelectorAll("#scheduleDays input[type=checkbox]:checked"))
+    .map(input => Number(input.value));
+}
+
+function scheduleRepeatText(schedule) {
+  if (schedule.repeat === "daily") return "Every day";
+  if (schedule.repeat === "once") return schedule.date ? "Once • " + schedule.date : "One time";
+  const names = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  return (schedule.days || []).sort((a,b) => a-b).map(d => names[d]).join(", ") || "Selected days";
+}
+
+function setSchedule() {
+  const time = $("scheduleTime")?.value || "";
+  const purpose = ($("schedulePurpose")?.value || "").trim();
+  const repeat = $("scheduleRepeat")?.value || "daily";
+  const ringtone = $("scheduleRingtone")?.value || "bell";
+  const date = $("scheduleDate")?.value || "";
+  let days = repeat === "daily" ? [0,1,2,3,4,5,6] : getSelectedScheduleDays();
+
+  if (!time) return showToast("Time required", "Please select schedule time.");
+  if (!purpose) return showToast("Purpose required", "Please enter the schedule purpose.");
+  if (repeat === "days" && days.length === 0) return showToast("Select days", "Choose at least one day.");
+  if (repeat === "once" && !date) return showToast("Date required", "Please select a date.");
+
+  if (repeat === "once" && date < new Date().toISOString().slice(0,10)) {
+    return showToast("Invalid date", "Please select today or a future date.");
+  }
+
+  schedules.push({
+    id: Date.now() + "-" + Math.random().toString(16).slice(2),
+    time, purpose, ringtone, repeat, days, date,
+    enabled: true, lastTriggeredKey: null
+  });
+
+  saveSchedules();
+  renderSchedules();
+  $("scheduleTime").value = "";
+  $("schedulePurpose").value = "";
+  $("scheduleRepeat").value = "daily";
+  $("scheduleDate").value = "";
+  document.querySelectorAll("#scheduleDays input[type=checkbox]").forEach(x => x.checked = false);
+  updateScheduleRepeatUI();
+  showToast("Schedule added", time + " schedule saved");
+}
+
+function deleteSchedule(id) {
+  schedules = schedules.filter(s => s.id !== id);
+  saveSchedules();
+  renderSchedules();
+  showToast("Schedule deleted", "Schedule removed successfully.");
+}
+
+function toggleSchedule(id) {
+  const schedule = schedules.find(s => s.id === id);
+  if (!schedule) return;
+  schedule.enabled = !schedule.enabled;
+  saveSchedules();
+  renderSchedules();
+  showToast(schedule.enabled ? "Schedule enabled" : "Schedule disabled", schedule.enabled ? "The schedule is active." : "The schedule is paused.");
+}
+
+function renderSchedules() {
+  const list = $("scheduleList");
+  if (!list) return;
+  if (!schedules.length) {
+    list.innerHTML = "No schedules set yet";
+    return;
+  }
+  list.innerHTML = schedules.map(schedule => `
+    <div class="schedule-card ${schedule.enabled ? "" : "schedule-disabled"}">
+      <div class="alarm-top">
+        <div class="alarm-time">${escapeHTML(schedule.time)}</div>
+        <button type="button" class="delete-btn" onclick="deleteSchedule('${escapeHTML(schedule.id)}')" aria-label="Delete schedule">✕</button>
+      </div>
+      <div class="alarm-purpose">${escapeHTML(schedule.purpose)}</div>
+      <div class="schedule-repeat">📅 ${escapeHTML(scheduleRepeatText(schedule))}</div>
+      <div class="schedule-actions">
+        <button type="button" class="schedule-toggle ${schedule.enabled ? "enabled" : "disabled"}" onclick="toggleSchedule('${escapeHTML(schedule.id)}')">${schedule.enabled ? "✓ Enabled" : "○ Disabled"}</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+function getScheduleTriggerKey(schedule) {
+  const now = new Date();
+  return now.getFullYear() + "-" + String(now.getMonth()+1).padStart(2,"0") + "-" + String(now.getDate()).padStart(2,"0") + "_" + schedule.time;
+}
+
+function isScheduleDue(schedule, now) {
+  const today = now.getDay();
+  if (schedule.repeat === "once") {
+    return schedule.date === now.toISOString().slice(0,10);
+  }
+  return schedule.repeat === "daily" || (schedule.days || []).includes(today);
+}
+
+function checkSchedules(now, currentTime) {
+  let changed = false;
+  schedules.forEach(schedule => {
+    if (!schedule.enabled || schedule.time !== currentTime || !isScheduleDue(schedule, now)) return;
+    const key = getScheduleTriggerKey(schedule);
+    if (schedule.lastTriggeredKey === key) return;
+    schedule.lastTriggeredKey = key;
+    changed = true;
+    showAlarmPopup(schedule, null);
+    if (schedule.repeat === "once") schedule.enabled = false;
+  });
+  if (changed) {
+    saveSchedules();
+    renderSchedules();
+  }
+}
+
+async function previewScheduleRingtone() {
+  await unlockAudio();
+  const ringtone = $("scheduleRingtone")?.value || "bell";
+  if (ringtone === "custom" && !customRingtoneBuffer) {
+    return showToast("No custom ringtone", "Choose a custom ringtone from the Alarms tab first.");
+  }
+  playRingtone(ringtone);
+}
 
 // =========================================================
 // INDEXED DB - CUSTOM RINGTONE
@@ -723,6 +901,14 @@ function ensureCustomOption() {
       option
     );
 
+  }
+
+  const scheduleSelect = $("scheduleRingtone");
+  if (scheduleSelect && !scheduleSelect.querySelector('option[value="custom"]')) {
+    const scheduleOption = document.createElement("option");
+    scheduleOption.value = "custom";
+    scheduleOption.textContent = "🎵 Custom Ringtone";
+    scheduleSelect.appendChild(scheduleOption);
   }
 
 }
@@ -2058,6 +2244,10 @@ function showAlarmPopup(
   activeAlarmIndex =
     index;
 
+  activeAlarmData = alarm;
+
+  activeAlarmIsSchedule = index === -1;
+
 
   const popup =
     $("alarmPopup");
@@ -2153,6 +2343,10 @@ function stopAlarm() {
   activeAlarmIndex =
     null;
 
+  activeAlarmData = null;
+
+  activeAlarmIsSchedule = false;
+
 }
 
 
@@ -2162,78 +2356,53 @@ function stopAlarm() {
 
 function snoozeAlarm() {
 
-  if (
-    activeAlarmIndex === null
-  ) {
-
+  if (activeAlarmIndex === null || !activeAlarmData) {
     return;
-
   }
 
+  const now = new Date();
+  now.setMinutes(now.getMinutes() + 5);
 
-  const alarm =
-    alarms[
-      activeAlarmIndex
-    ];
+  const newTime =
+    String(now.getHours()).padStart(2, "0") +
+    ":" +
+    String(now.getMinutes()).padStart(2, "0");
 
-
-  if (!alarm) {
+  if (activeAlarmIsSchedule) {
+    const snoozeAlarmData = {
+      time: newTime,
+      purpose: activeAlarmData.purpose + " (Snooze)",
+      ringtone: activeAlarmData.ringtone || "bell"
+    };
 
     stopAlarm();
 
-    return;
+    if (scheduleSnoozeTimer) clearTimeout(scheduleSnoozeTimer);
+    const delay = Math.max(1000, now.getTime() - Date.now());
+    scheduleSnoozeTimer = setTimeout(function() {
+      scheduleSnoozeTimer = null;
+      showAlarmPopup(snoozeAlarmData, -1);
+    }, delay);
 
+    showToast("Alarm snoozed", "Next ring: " + newTime);
+    return;
   }
 
+  const alarm = alarms[activeAlarmIndex];
 
-  const now =
-    new Date();
+  if (!alarm) {
+    stopAlarm();
+    return;
+  }
 
-
-  now.setMinutes(
-    now.getMinutes() + 5
-  );
-
-
-  const newTime =
-
-    String(
-      now.getHours()
-    ).padStart(2, "0")
-
-    +
-
-    ":"
-
-    +
-
-    String(
-      now.getMinutes()
-    ).padStart(2, "0");
-
-
-  alarm.time =
-    newTime;
-
-
-  alarm.lastTriggeredKey =
-    null;
-
+  alarm.time = newTime;
+  alarm.lastTriggeredKey = null;
 
   saveAlarms();
-
-
   stopAlarm();
-
-
   renderAlarms();
 
-
-  showToast(
-    "Alarm snoozed",
-    "Next ring: " +
-    newTime
-  );
+  showToast("Alarm snoozed", "Next ring: " + newTime);
 
 }
 
@@ -2306,6 +2475,9 @@ function checkAlarms() {
 
   let changed =
     false;
+
+
+  checkSchedules(now, currentTime);
 
 
   alarms.forEach(
@@ -2664,29 +2836,33 @@ function showSection(
   element
 ) {
 
-  document
-    .querySelectorAll(
-      ".nav-item"
-    )
-    .forEach(
-      function(item) {
+  document.querySelectorAll(".nav-item").forEach(function(item) {
+    item.classList.remove("active");
+  });
 
-        item.classList.remove(
-          "active"
-        );
+  if (element) element.classList.add("active");
 
-      }
-    );
+  const sections = {
+    alarms: $("alarmsSection"),
+    schedule: $("scheduleSection"),
+    settings: $("settingsSection")
+  };
 
+  Object.keys(sections).forEach(function(key) {
+    const el = sections[key];
+    if (el) {
+      el.classList.toggle("active-section", key === section);
+      el.classList.toggle("hidden-section", key !== section);
+    }
+  });
 
-  if (element) {
+  const fab = document.querySelector(".fab-btn");
+  if (fab) fab.style.display = section === "alarms" ? "block" : "none";
 
-    element.classList.add(
-      "active"
-    );
-
+  if (section === "schedule") {
+    renderSchedules();
+    updateScheduleRepeatUI();
   }
-
 }
 
 
@@ -2736,6 +2912,8 @@ async function initializeApp() {
   setupRingtoneSelect();
 
   renderAlarms();
+  renderSchedules();
+  updateScheduleRepeatUI();
 
   updateCountdowns();
 

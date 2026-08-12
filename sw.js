@@ -1,4 +1,4 @@
-const CACHE_NAME = "smart-alarm-v2";
+const CACHE_NAME = "smart-alarm-v3";
 
 const APP_FILES = [
   "./",
