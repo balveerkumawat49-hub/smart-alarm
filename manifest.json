@@ -1,0 +1,30 @@
+{
+  "id": "/smart-alarm/",
+  "name": "Smart Alarm",
+  "short_name": "Smart Alarm",
+  "description": "A modern smart alarm app with custom ringtones and smart alarm management.",
+  "start_url": "/smart-alarm/",
+  "scope": "/smart-alarm/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b1020",
+  "theme_color": "#0b1020",
+  "lang": "en-IN",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+
+  "icons": [
+    {
+      "src": "/smart-alarm/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/smart-alarm/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

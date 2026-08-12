@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Balveer Smart Alarm</title>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0b1020">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Smart Alarm">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+</head>
+
+<body>
+
+  <div class="background"></div>
+
+  <main class="app-card">
+
+    <!-- Live Clock -->
+    <section class="live-clock">
+      <div id="currentTime" class="clock-time">
+        00:00:00
+      </div>
+
+      <div id="currentDate" class="clock-date">
+        Loading date...
+      </div>
+    </section>
+
+
+    <!-- Header -->
+    <div class="top-bar">
+      <span>Premium Alarm</span>
+      <div class="dot"></div>
+    </div>
+
+    <h1>⏰ Smart Alarm</h1>
+
+    <p class="subtitle">
+      Wake up with purpose, not just a sound.
+    </p>
+
+
+    <!-- Alarm Time -->
+    <div class="input-group">
+
+      <label for="alarmTime">
+        Alarm Time
+      </label>
+
+      <input
+        type="time"
+        id="alarmTime"
+      >
+
+    </div>
+
+
+    <!-- Purpose -->
+    <div class="input-group">
+
+      <label for="alarmText">
+        Purpose
+      </label>
+
+      <input
+        type="text"
+        id="alarmText"
+        placeholder="Gym, Study, Meeting..."
+        maxlength="100"
+      >
+
+    </div>
+
+
+    <!-- Ringtone -->
+    <div class="input-group">
+
+      <label for="ringtoneSelect">
+        🔔 Alarm Ringtone
+      </label>
+
+      <select id="ringtoneSelect">
+
+        <option value="bell">
+          🔔 Bell
+        </option>
+
+        <option value="digital">
+          📱 Digital
+        </option>
+
+        <option value="soft">
+          🎵 Soft
+        </option>
+
+      </select>
+
+
+      <button
+        type="button"
+        class="preview-btn"
+        onclick="previewRingtone()"
+      >
+        ▶ Preview Tone
+      </button>
+
+    </div>
+
+
+    <!-- Set Alarm -->
+    <button
+      type="button"
+      class="premium-btn"
+      onclick="setAlarm()"
+    >
+      Set Smart Alarm
+    </button>
+
+
+    <!-- Alarm List -->
+    <div
+      class="status-card"
+      id="status"
+    >
+      No alarms set
+    </div>
+
+
+    <!-- Footer -->
+    <div class="footer">
+      Designed &amp; Developed by
+      <b>Balveer Kumawat</b>
+    </div>
+
+  </main>
+
+
+  <!-- Floating Add Button -->
+  <button
+    type="button"
+    class="fab-btn"
+    onclick="openAddAlarm()"
+    aria-label="Add alarm"
+  >
+    +
+  </button>
+
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+
+    <button
+      type="button"
+      class="nav-item active"
+      onclick="showSection('alarms', this)"
+    >
+      <span>⏰</span>
+      <p>Alarms</p>
+    </button>
+
+
+    <button
+      type="button"
+      class="nav-item"
+      onclick="showSection('schedule', this)"
+    >
+      <span>📅</span>
+      <p>Schedule</p>
+    </button>
+
+
+    <button
+      type="button"
+      class="nav-item"
+      onclick="showSection('settings', this)"
+    >
+      <span>⚙️</span>
+      <p>Settings</p>
+    </button>
+
+  </nav>
+
+
+  <!-- Alarm Popup -->
+  <div
+    id="alarmPopup"
+    class="alarm-popup hidden"
+    role="dialog"
+    aria-modal="true"
+  >
+
+    <div class="alarm-popup-card">
+
+      <!-- Stable icon - no blinking -->
+      <div class="ring-animation">
+        🔔
+      </div>
+
+
+      <h2>
+        Alarm Ringing
+      </h2>
+
+
+      <div
+        id="popupTime"
+        class="popup-time"
+      >
+        00:00
+      </div>
+
+
+      <div
+        id="popupTask"
+        class="popup-task"
+      >
+        Task
+      </div>
+
+
+      <div class="popup-buttons">
+
+        <button
+          type="button"
+          class="snooze-btn"
+          onclick="snoozeAlarm()"
+        >
+          Snooze 5 min
+        </button>
+
+
+        <button
+          type="button"
+          class="stop-btn"
+          onclick="stopAlarm()"
+        >
+          Stop Alarm
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <script src="script.js"></script>
+
+</body>
+</html>

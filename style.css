@@ -1,0 +1,671 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  min-height: 100vh;
+  background: #0b1020;
+  color: white;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.background {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle at top left,
+      #2563eb55,
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      #7c3aed55,
+      transparent 35%
+    ),
+    linear-gradient(
+      135deg,
+      #0f172a,
+      #111827,
+      #0b1020
+    );
+  z-index: -1;
+}
+
+
+/* =========================
+   MAIN APP
+========================= */
+
+.app-card {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  padding: 24px 20px 110px;
+}
+
+
+/* =========================
+   TOP BAR
+========================= */
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  font-size: 13px;
+  color: #cbd5e1;
+
+  margin-bottom: 15px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+
+  border-radius: 50%;
+
+  background: #22c55e;
+
+  box-shadow:
+    0 0 10px #22c55e;
+}
+
+
+/* =========================
+   TITLE
+========================= */
+
+h1 {
+  font-size: 34px;
+  font-weight: 700;
+
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: #cbd5e1;
+
+  font-size: 14px;
+
+  margin-bottom: 28px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================
+   CLOCK
+========================= */
+
+.live-clock {
+  margin: 15px 20px 25px;
+
+  padding: 18px;
+
+  border-radius: 24px;
+
+  background:
+    rgba(255, 255, 255, 0.06);
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.08);
+
+  text-align: center;
+
+  backdrop-filter: blur(10px);
+
+  box-shadow:
+    0 0 20px
+    rgba(37, 99, 235, 0.15);
+}
+
+.clock-time {
+  font-size: 38px;
+
+  font-weight: 700;
+
+  letter-spacing: 2px;
+
+  color: #ffffff;
+}
+
+.clock-date {
+  margin-top: 6px;
+
+  font-size: 14px;
+
+  color: #cbd5e1;
+}
+
+
+/* =========================
+   INPUTS
+========================= */
+
+.input-group {
+  margin-bottom: 18px;
+}
+
+.input-group label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  font-size: 14px;
+
+  font-weight: 500;
+
+  color: #e2e8f0;
+}
+
+.input-group input,
+select {
+  width: 100%;
+
+  padding: 15px 16px;
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.08);
+
+  outline: none;
+
+  border-radius: 18px;
+
+  background:
+    rgba(255, 255, 255, 0.08);
+
+  color: white;
+
+  font-size: 16px;
+}
+
+.input-group input::placeholder {
+  color: #94a3b8;
+}
+
+select {
+  padding: 14px;
+
+  border-radius: 16px;
+}
+
+select option {
+  background: #111827;
+
+  color: white;
+}
+
+
+/* =========================
+   SET ALARM BUTTON
+========================= */
+
+.premium-btn {
+  width: 100%;
+
+  padding: 15px;
+
+  margin-top: 10px;
+
+  border: none;
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #7c3aed
+    );
+
+  color: white;
+
+  font-size: 16px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+
+  box-shadow:
+    0 10px 25px
+    rgba(37, 99, 235, 0.35);
+}
+
+.premium-btn:hover {
+  transform: translateY(-2px);
+}
+
+
+/* =========================
+   RINGTONE PREVIEW
+========================= */
+
+.preview-btn {
+  width: 100%;
+
+  margin-top: 10px;
+
+  padding: 12px;
+
+  border: none;
+
+  border-radius: 14px;
+
+  background:
+    rgba(255, 255, 255, 0.08);
+
+  color: white;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+
+/* =========================
+   ALARM LIST
+========================= */
+
+.status-card {
+  margin-top: 22px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 15px;
+}
+
+.alarm-card {
+  width: 100%;
+
+  padding: 16px;
+
+  border-radius: 20px;
+
+  background:
+    rgba(255, 255, 255, 0.07);
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.08);
+
+  color: #e2e8f0;
+
+  line-height: 1.6;
+
+  text-align: left;
+
+  backdrop-filter: blur(10px);
+}
+
+.alarm-top {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+}
+
+.alarm-time {
+  font-size: 26px;
+
+  font-weight: 700;
+}
+
+.alarm-purpose {
+  margin-top: 8px;
+
+  color: #e2e8f0;
+
+  font-size: 14px;
+
+  word-break: break-word;
+}
+
+.alarm-countdown {
+  margin-top: 10px;
+
+  color: #94a3b8;
+
+  font-size: 13px;
+}
+
+.delete-btn {
+  width: 34px;
+
+  height: 34px;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: #ef4444;
+
+  color: white;
+
+  font-size: 16px;
+
+  cursor: pointer;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer {
+  text-align: center;
+
+  margin-top: 22px;
+
+  font-size: 12px;
+
+  color: #94a3b8;
+}
+
+.footer b {
+  color: white;
+
+  font-weight: 600;
+}
+
+
+/* =========================
+   ALARM POPUP
+========================= */
+
+.alarm-popup {
+  position: fixed;
+
+  inset: 0;
+
+  background:
+    rgba(0, 0, 0, 0.92);
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  z-index: 9999;
+
+  padding: 20px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.alarm-popup-card {
+  width: 100%;
+
+  max-width: 340px;
+
+  padding: 35px 25px;
+
+  border-radius: 30px;
+
+  text-align: center;
+
+  background:
+    linear-gradient(
+      135deg,
+      #1e293b,
+      #0f172a
+    );
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.1);
+
+  box-shadow:
+    0 0 40px
+    rgba(239, 68, 68, 0.35);
+}
+
+
+/* IMPORTANT:
+   No animation here.
+   Alarm icon will NOT blink.
+*/
+
+.ring-animation {
+  font-size: 70px;
+
+  line-height: 1;
+}
+
+.popup-time {
+  font-size: 42px;
+
+  font-weight: 700;
+
+  margin-top: 15px;
+}
+
+.popup-task {
+  margin-top: 10px;
+
+  color: #cbd5e1;
+
+  font-size: 16px;
+
+  line-height: 1.5;
+}
+
+.popup-buttons {
+  display: flex;
+
+  gap: 12px;
+
+  margin-top: 28px;
+}
+
+.popup-buttons button {
+  flex: 1;
+
+  padding: 14px;
+
+  border: none;
+
+  border-radius: 16px;
+
+  color: white;
+
+  font-weight: 600;
+
+  font-size: 15px;
+
+  cursor: pointer;
+}
+
+.snooze-btn {
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #3b82f6
+    );
+}
+
+.stop-btn {
+  background:
+    linear-gradient(
+      135deg,
+      #ef4444,
+      #dc2626
+    );
+}
+
+
+/* =========================
+   FLOATING BUTTON
+========================= */
+
+.fab-btn {
+  position: fixed;
+
+  right: 22px;
+
+  bottom: 90px;
+
+  width: 64px;
+
+  height: 64px;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #7c3aed
+    );
+
+  color: white;
+
+  font-size: 34px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  z-index: 1000;
+
+  box-shadow:
+    0 10px 25px
+    rgba(37, 99, 235, 0.35);
+
+  transition: 0.25s ease;
+}
+
+.fab-btn:hover {
+  transform: scale(1.08);
+}
+
+
+/* =========================
+   BOTTOM NAVIGATION
+========================= */
+
+.bottom-nav {
+  position: fixed;
+
+  left: 0;
+
+  right: 0;
+
+  bottom: 0;
+
+  height: 72px;
+
+  display: flex;
+
+  justify-content: space-around;
+
+  align-items: center;
+
+  background:
+    rgba(15, 23, 42, 0.92);
+
+  backdrop-filter: blur(16px);
+
+  border-top:
+    1px solid
+    rgba(255, 255, 255, 0.08);
+
+  z-index: 999;
+}
+
+.nav-item {
+  appearance: none;
+
+  border: none;
+
+  background: transparent;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: #94a3b8;
+
+  font-family: inherit;
+
+  font-size: 12px;
+
+  gap: 3px;
+
+  cursor: pointer;
+}
+
+.nav-item span {
+  font-size: 22px;
+}
+
+.nav-item.active {
+  color: #ffffff;
+}
+
+.nav-item p {
+  margin: 0;
+}
+
+
+/* =========================
+   SMALL SCREEN
+========================= */
+
+@media (max-width: 380px) {
+
+  h1 {
+    font-size: 30px;
+  }
+
+  .clock-time {
+    font-size: 32px;
+  }
+
+  .popup-buttons {
+    flex-direction: column;
+  }
+
+}
