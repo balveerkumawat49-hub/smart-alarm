@@ -51,8 +51,6 @@
     </p>
 
 
-    <section id="alarmsSection" class="app-section active-section">
-
     <!-- Alarm Time -->
     <div class="input-group">
 
@@ -139,77 +137,6 @@
     </div>
 
 
-    </section>
-
-    <!-- Schedule Section -->
-    <section id="scheduleSection" class="app-section hidden-section">
-      <div class="section-heading">
-        <h2>📅 Schedule</h2>
-        <p>Set alarms to repeat automatically.</p>
-      </div>
-
-      <div class="schedule-form">
-        <div class="input-group">
-          <label for="scheduleTime">Schedule Time</label>
-          <input type="time" id="scheduleTime">
-        </div>
-
-        <div class="input-group">
-          <label for="schedulePurpose">Purpose</label>
-          <input type="text" id="schedulePurpose" placeholder="Gym, Study, Meeting..." maxlength="100">
-        </div>
-
-        <div class="input-group">
-          <label for="scheduleRepeat">Repeat</label>
-          <select id="scheduleRepeat" onchange="updateScheduleRepeatUI()">
-            <option value="daily">Every day</option>
-            <option value="days">Selected days</option>
-            <option value="once">One time</option>
-          </select>
-        </div>
-
-        <div id="scheduleDays" class="day-picker hidden-section">
-          <label>Days</label>
-          <div class="days-grid">
-            <label><input type="checkbox" value="1"> Mon</label>
-            <label><input type="checkbox" value="2"> Tue</label>
-            <label><input type="checkbox" value="3"> Wed</label>
-            <label><input type="checkbox" value="4"> Thu</label>
-            <label><input type="checkbox" value="5"> Fri</label>
-            <label><input type="checkbox" value="6"> Sat</label>
-            <label><input type="checkbox" value="0"> Sun</label>
-          </div>
-        </div>
-
-        <div id="scheduleDateGroup" class="input-group hidden-section">
-          <label for="scheduleDate">Date</label>
-          <input type="date" id="scheduleDate">
-        </div>
-
-        <div class="input-group">
-          <label for="scheduleRingtone">🔔 Schedule Ringtone</label>
-          <select id="scheduleRingtone">
-            <option value="bell">🔔 Bell</option>
-            <option value="digital">📱 Digital</option>
-            <option value="soft">🎵 Soft</option>
-          </select>
-          <button type="button" class="preview-btn" onclick="previewScheduleRingtone()">▶ Preview Tone</button>
-        </div>
-
-        <button type="button" class="premium-btn" onclick="setSchedule()">Add Schedule</button>
-      </div>
-
-      <div id="scheduleList" class="status-card">No schedules set</div>
-    </section>
-
-    <!-- Settings Section -->
-    <section id="settingsSection" class="app-section hidden-section">
-      <div class="section-heading">
-        <h2>⚙️ Settings</h2>
-        <p>Your alarm and schedule data is stored on this device.</p>
-      </div>
-    </section>
-
     <!-- Footer -->
     <div class="footer">
       Designed &amp; Developed by
@@ -263,7 +190,102 @@
     </button>
 
   </nav>
+  <!-- Schedule Section -->
+  <section
+    id="schedule"
+    class="app-section"
+    style="display:none;"
+  >
 
+    <div class="section-header">
+      <h2>📅 Schedule</h2>
+      <p>Set your repeating alarms</p>
+    </div>
+
+    <div class="schedule-form">
+
+      <label for="scheduleTime">
+        ⏰ Time
+      </label>
+
+      <input
+        type="time"
+        id="scheduleTime"
+      />
+
+
+      <label for="schedulePurpose">
+        📝 Purpose
+      </label>
+
+      <input
+        type="text"
+        id="schedulePurpose"
+        placeholder="e.g. Wake up, Study..."
+      />
+
+
+      <label>
+        🔁 Repeat
+      </label>
+
+      <div class="schedule-days">
+
+        <button type="button" data-day="1">Mon</button>
+        <button type="button" data-day="2">Tue</button>
+        <button type="button" data-day="3">Wed</button>
+        <button type="button" data-day="4">Thu</button>
+        <button type="button" data-day="5">Fri</button>
+        <button type="button" data-day="6">Sat</button>
+        <button type="button" data-day="0">Sun</button>
+
+      </div>
+
+
+      <label for="scheduleRingtone">
+        🔔 Ringtone
+      </label>
+
+      <select id="scheduleRingtone">
+
+        <option value="bell">
+          🔔 Bell
+        </option>
+
+        <option value="digital">
+          📱 Digital
+        </option>
+
+        <option value="soft">
+          🌙 Soft
+        </option>
+
+        <option value="custom">
+          🎵 Custom
+        </option>
+
+      </select>
+
+
+      <button
+        type="button"
+        id="addScheduleBtn"
+        class="primary-btn"
+      >
+        ➕ Add Schedule
+      </button>
+
+    </div>
+
+
+    <div
+      id="scheduleList"
+      class="schedule-list"
+    >
+      No schedules set yet
+    </div>
+
+  </section>
 
   <!-- Alarm Popup -->
   <div

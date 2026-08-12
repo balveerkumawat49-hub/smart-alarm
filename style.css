@@ -670,115 +670,115 @@ select option {
 
 }
 
-/* =========================
-   APP SECTIONS / SCHEDULE
-========================= */
+/* =========================================================
+   SCHEDULE SYSTEM
+   ========================================================= */
 
-.hidden-section {
-  display: none !important;
-}
-
-.active-section {
-  display: block;
-  animation: slideUp 0.2s ease;
-}
-
-.section-heading {
-  margin-bottom: 22px;
-}
-
-.section-heading h2 {
-  font-size: 28px;
-  margin-bottom: 6px;
-}
-
-.section-heading p {
-  color: #94a3b8;
-  font-size: 13px;
-  line-height: 1.5;
+#schedule {
+  padding: 20px;
+  padding-bottom: 110px;
 }
 
 .schedule-form {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 18px;
   padding: 18px;
-  border-radius: 22px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08);
-  backdrop-filter: blur(10px);
+  margin-top: 15px;
 }
 
-.day-picker {
-  margin-bottom: 18px;
-}
-
-.day-picker > label {
+.schedule-form label {
   display: block;
-  margin-bottom: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #e2e8f0;
+  margin-top: 14px;
+  margin-bottom: 7px;
+  font-weight: 600;
 }
 
-.days-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-}
-
-.days-grid label {
-  padding: 10px 5px;
+.schedule-form input,
+.schedule-form select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px;
   border-radius: 12px;
-  background: rgba(255,255,255,0.07);
-  color: #cbd5e1;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.25);
+  color: inherit;
+  font-size: 15px;
+}
+
+.schedule-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.schedule-days button {
+  padding: 9px 3px;
+  border: none;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.10);
+  color: inherit;
   font-size: 12px;
-  text-align: center;
   cursor: pointer;
 }
 
-.days-grid input {
-  accent-color: #7c3aed;
-  margin-right: 3px;
+.schedule-days button.selected {
+  background: #2563eb;
+  color: white;
 }
 
-.schedule-card {
+#addScheduleBtn {
   width: 100%;
-  padding: 16px;
-  border-radius: 20px;
-  background: rgba(255,255,255,0.07);
-  border: 1px solid rgba(255,255,255,0.08);
-  color: #e2e8f0;
-  line-height: 1.6;
-  text-align: left;
-  backdrop-filter: blur(10px);
-}
-
-.schedule-disabled {
-  opacity: 0.55;
-}
-
-.schedule-repeat {
-  margin-top: 8px;
-  color: #94a3b8;
-  font-size: 13px;
-}
-
-.schedule-actions {
-  margin-top: 12px;
-}
-
-.schedule-toggle {
-  width: 100%;
-  padding: 10px 14px;
+  margin-top: 20px;
+  padding: 14px;
   border: none;
   border-radius: 13px;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
   color: white;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
 }
 
-.schedule-toggle.enabled {
-  background: rgba(34,197,94,0.18);
+.schedule-list {
+  margin-top: 20px;
 }
 
-.schedule-toggle.disabled {
-  background: rgba(148,163,184,0.16);
+.schedule-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 16px;
+  padding: 15px;
+  margin-bottom: 12px;
+}
+
+.schedule-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.schedule-card-time {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.schedule-card-purpose {
+  margin-top: 5px;
+  opacity: 0.8;
+}
+
+.schedule-card-days {
+  margin-top: 8px;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.delete-schedule-btn {
+  border: none;
+  background: #ef4444;
+  color: white;
+  border-radius: 9px;
+  padding: 7px 10px;
+  cursor: pointer;
 }
